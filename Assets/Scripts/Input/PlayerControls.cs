@@ -20,7 +20,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""a6b75d8c-2c51-4e93-b4cf-757072bff107"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": ""NormalizeVector2"",
@@ -32,6 +32,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""936dd184-365c-4920-9ef1-71bac61914c1"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": ""NormalizeVector2"",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""3e355ba4-a9dc-4f6c-ad20-76c3e460943c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
                     ""interactions"": """"
                 }
             ],
@@ -211,6 +219,28 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3d20499c-2b5b-47aa-8cd8-c23822e3b186"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9628be45-493f-4b4a-841b-a120f6eb511a"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -221,6 +251,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
         m_Default_Move = m_Default.FindAction("Move", throwIfNotFound: true);
         m_Default_Look = m_Default.FindAction("Look", throwIfNotFound: true);
+        m_Default_Fire = m_Default.FindAction("Fire", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -272,12 +303,14 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     private IDefaultActions m_DefaultActionsCallbackInterface;
     private readonly InputAction m_Default_Move;
     private readonly InputAction m_Default_Look;
+    private readonly InputAction m_Default_Fire;
     public struct DefaultActions
     {
         private @PlayerControls m_Wrapper;
         public DefaultActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Default_Move;
         public InputAction @Look => m_Wrapper.m_Default_Look;
+        public InputAction @Fire => m_Wrapper.m_Default_Fire;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -293,6 +326,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Look.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLook;
+                @Fire.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
+                @Fire.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
+                @Fire.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnFire;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -303,6 +339,9 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @Fire.started += instance.OnFire;
+                @Fire.performed += instance.OnFire;
+                @Fire.canceled += instance.OnFire;
             }
         }
     }
@@ -311,5 +350,6 @@ public class @PlayerControls : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnFire(InputAction.CallbackContext context);
     }
 }
