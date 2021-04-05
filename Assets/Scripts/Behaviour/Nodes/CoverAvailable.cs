@@ -32,6 +32,7 @@ public class CoverAvailable : Node
                 return ai.GetBestCoverSpot();
             }
         }
+
         Transform bestSpot = null;
         float bestAngle = 0f;
         for(int i = 0; i < covers.Length; i++)
@@ -60,6 +61,11 @@ public class CoverAvailable : Node
 
         for(int i = 0; i < spots.Length; i++)
         {
+            if(bestSpot == null)
+            {
+                bestSpot = spots[i];
+            }
+
             if(IsSpotValid(spots[i]))
             {
                 float angle = Vector3.Angle(spots[i].forward, target.forward);

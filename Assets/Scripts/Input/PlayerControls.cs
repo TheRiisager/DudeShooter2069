@@ -47,7 +47,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                 {
                     ""name"": ""Keyboard"",
                     ""id"": ""b544b76e-e8a9-4860-9c72-99a611eb1f93"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -245,7 +245,13 @@ public class @PlayerControls : IInputActionCollection, IDisposable
             ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""default"",
+            ""bindingGroup"": ""default"",
+            ""devices"": []
+        }
+    ]
 }");
         // Default
         m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
@@ -346,6 +352,15 @@ public class @PlayerControls : IInputActionCollection, IDisposable
         }
     }
     public DefaultActions @Default => new DefaultActions(this);
+    private int m_defaultSchemeIndex = -1;
+    public InputControlScheme defaultScheme
+    {
+        get
+        {
+            if (m_defaultSchemeIndex == -1) m_defaultSchemeIndex = asset.FindControlSchemeIndex("default");
+            return asset.controlSchemes[m_defaultSchemeIndex];
+        }
+    }
     public interface IDefaultActions
     {
         void OnMove(InputAction.CallbackContext context);

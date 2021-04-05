@@ -34,7 +34,7 @@
                 {
                     "name": "Keyboard",
                     "id": "b544b76e-e8a9-4860-9c72-99a611eb1f93",
-                    "path": "2DVector",
+                    "path": "2DVector(mode=1)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -232,5 +232,11 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "default",
+            "bindingGroup": "default",
+            "devices": []
+        }
+    ]
 }

@@ -12,6 +12,7 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
 
     [Header("Player parameters")]
     [SerializeField] private float playerSpeed = 10f;
+    [SerializeField] private float shotDamage;
 
     private PlayerControls playerControls;
     private CharacterController controller;
@@ -73,7 +74,17 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
     {
         if( PlayerFired() )
         {
-            Debug.Log("FIRE!!!");
+        RaycastHit hit;
+        Vector3 direction = cameraTransform.forward;
+        if(Physics.Raycast(transform.position, direction, out hit))
+        {
+            IDamageable objectToDamage = hit.collider.gameObject.GetComponent(typeof(IDamageable)) as IDamageable;
+            if(objectToDamage != null)
+            {
+                objectToDamage.TakeDamage(shotDamage);
+                Debug.Log("Hit!");
+            }
+        }
         }
     }
 
