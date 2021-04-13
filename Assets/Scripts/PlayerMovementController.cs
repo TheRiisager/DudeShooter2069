@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 public class PlayerMovementController : MonoBehaviour, IDamageable
 {
     [Header("Camera")]
@@ -105,6 +106,7 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
     public void Kill()
     {
         Destroy(transform.gameObject);
+        SceneManager.LoadScene(0);
     }
 
     public void TakeDamage(float damage)
