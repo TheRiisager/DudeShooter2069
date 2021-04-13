@@ -137,4 +137,5 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
     {
         return playerControls.Default.Fire.triggered;
     }
+
 }
