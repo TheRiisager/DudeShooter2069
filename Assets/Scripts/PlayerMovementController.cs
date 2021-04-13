@@ -56,8 +56,8 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
         Quaternion desiredRotation = new Quaternion(0f, cameraTransform.rotation.y, 0f, transform.rotation.w);
         transform.rotation = desiredRotation;
 
-        
-        
+
+
     }
 
     private void MovePlayer()
@@ -65,26 +65,26 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
         //move character according to camera direction
         movement2D = GetPlayerMovement();
         Vector3 movement3D = new Vector3(movement2D.x, 0f, movement2D.y);
-        movement3D = cameraTransform.forward * movement3D.z +cameraTransform.right * movement3D.x;
+        movement3D = cameraTransform.forward * movement3D.z + cameraTransform.right * movement3D.x;
         movement3D.y = 0f;
         controller.Move(movement3D * playerSpeed * Time.deltaTime);
     }
 
     private void Fire()
     {
-        if( PlayerFired() )
+        if (PlayerFired())
         {
-        RaycastHit hit;
-        Vector3 direction = cameraTransform.forward;
-        if(Physics.Raycast(transform.position, direction, out hit))
-        {
-            IDamageable objectToDamage = hit.collider.gameObject.GetComponent(typeof(IDamageable)) as IDamageable;
-            if(objectToDamage != null)
+            RaycastHit hit;
+            Vector3 direction = cameraTransform.forward;
+            if (Physics.Raycast(transform.position, direction, out hit))
             {
-                objectToDamage.TakeDamage(shotDamage);
-                Debug.Log("Hit!");
+                IDamageable objectToDamage = hit.collider.gameObject.GetComponent(typeof(IDamageable)) as IDamageable;
+                if (objectToDamage != null)
+                {
+                    objectToDamage.TakeDamage(shotDamage);
+                    Debug.Log("Hit!");
+                }
             }
-        }
         }
     }
 
@@ -95,7 +95,7 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
 
     public void TakeDamage(float damage)
     {
-        
+
     }
 
     private void SetAnimatorParams()
@@ -117,4 +117,5 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
     {
         return playerControls.Default.Fire.triggered;
     }
+
 }
