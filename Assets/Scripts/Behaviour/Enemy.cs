@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private Transform bestCoverSpot;
     private Node topNode;
     public HealthBar healthBar;
+    public AudioSource shoot_sound;
 
 
     //components
@@ -100,7 +101,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public bool Shoot()
     {
-
         RaycastHit hit;
         Vector3 direction = transform.forward;
         muzzleFlash.Play();

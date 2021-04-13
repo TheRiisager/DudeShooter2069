@@ -27,6 +27,8 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
 
     public ParticleSystem muzzleFlash;
 
+    public AudioSource shoot_sound;
+
 
     // Called before start
     void Awake()
@@ -92,6 +94,7 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
             RaycastHit hit;
             Vector3 direction = cameraTransform.forward;
             muzzleFlash.Play();
+            shoot_sound.Play();
             if (Physics.Raycast(transform.position, direction, out hit))
             {
                 IDamageable objectToDamage = hit.collider.gameObject.GetComponent(typeof(IDamageable)) as IDamageable;
