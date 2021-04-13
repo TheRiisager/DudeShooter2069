@@ -24,6 +24,8 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
 
     public HealthBar healthBar;
 
+    public ParticleSystem muzzleFlash;
+
 
     // Called before start
     void Awake()
@@ -88,13 +90,13 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
         {
             RaycastHit hit;
             Vector3 direction = cameraTransform.forward;
+            muzzleFlash.Play();
             if (Physics.Raycast(transform.position, direction, out hit))
             {
                 IDamageable objectToDamage = hit.collider.gameObject.GetComponent(typeof(IDamageable)) as IDamageable;
                 if (objectToDamage != null)
                 {
                     objectToDamage.TakeDamage(shotDamage);
-                    Debug.Log("Hit!");
                 }
             }
         }

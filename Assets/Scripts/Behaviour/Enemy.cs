@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     //components
     private NavMeshAgent agent;
+    public ParticleSystem muzzleFlash;
 
     void Start()
     {
@@ -102,6 +103,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         RaycastHit hit;
         Vector3 direction = transform.forward;
+        muzzleFlash.Play();
         if (Physics.Raycast(transform.position, direction, out hit))
         {
             if (hit.collider.transform == target)
