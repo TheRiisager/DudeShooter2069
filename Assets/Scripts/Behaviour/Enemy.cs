@@ -22,10 +22,19 @@ public class Enemy : MonoBehaviour, IDamageable
     private float currentHealth;
     private Transform bestCoverSpot;
     private Node topNode;
+    public HealthBar healthBar;
 
 
     //components
     private NavMeshAgent agent;
+
+    void Start()
+    {
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+    }
+
+    // Called before start
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -36,8 +45,11 @@ public class Enemy : MonoBehaviour, IDamageable
     // Update is called once per frame
     void Update()
     {
-        topNode.Evaluate();
-        currentHealth = Mathf.Clamp(currentHealth + healthRegen * Time.deltaTime, 0, maxHealth);
+        if (target != null)
+        {
+            topNode.Evaluate();
+            currentHealth = Mathf.Clamp(currentHealth + healthRegen * Time.deltaTime, 0, maxHealth);
+        }
     }
 
     private void ConstructBehaviourTree()
@@ -51,12 +63,12 @@ public class Enemy : MonoBehaviour, IDamageable
 
         Inverter healthInverter = new Inverter(health);
 
-        Sequence takeCoverSequence = new Sequence(new List<Node> {health, coverAvailable, enterCover});
-        Sequence attackSequence = new Sequence(new List<Node> {range, healthInverter, chase, shoot});
+        Sequence takeCoverSequence = new Sequence(new List<Node> { health, coverAvailable, enterCover });
+        Sequence attackSequence = new Sequence(new List<Node> { range, healthInverter, chase, shoot });
 
-        Selector topSelector = new Selector(new List<Node> {takeCoverSequence, attackSequence});
+        Selector topSelector = new Selector(new List<Node> { takeCoverSequence, attackSequence });
         topNode = topSelector;
-        
+
 
     }
 
@@ -87,18 +99,17 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public bool Shoot()
     {
-        
+
         RaycastHit hit;
         Vector3 direction = transform.forward;
-        if(Physics.Raycast(transform.position, direction, out hit))
+        if (Physics.Raycast(transform.position, direction, out hit))
         {
-            if(hit.collider.transform == target)
+            if (hit.collider.transform == target)
             {
                 IDamageable objectToDamage = hit.collider.gameObject.GetComponent(typeof(IDamageable)) as IDamageable;
-                if(objectToDamage != null)
+                if (objectToDamage != null)
                 {
-                    objectToDamage.TakeDamage(ShotDamage);
-                    Debug.Log("enemy hit!");
+                    objectToDamage.TakeDamage(ShotDamage * Time.deltaTime);
                     return true;
                 }
             }
@@ -108,12 +119,18 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public void Kill()
     {
-
+        Destroy(transform.gameObject);
     }
 
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        healthBar.SetHealth(currentHealth);
+
+        if (currentHealth <= 0.0f)
+        {
+            Kill();
+        }
     }
 
     void OnDrawGizmos()

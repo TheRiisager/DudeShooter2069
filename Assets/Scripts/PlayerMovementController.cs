@@ -19,13 +19,25 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
     private Vector3 deltaInput;
     private Vector3 startingRotation;
     private Vector2 movement2D;
+    public float maxHealth = 100.0f;
+    public float currentHealth;
 
+    public HealthBar healthBar;
+
+
+    // Called before start
     void Awake()
     {
         playerControls = new PlayerControls();
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         movement2D = Vector2.zero;
+    }
+
+    void Start()
+    {
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     private void OnEnable()
@@ -56,8 +68,8 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
         Quaternion desiredRotation = new Quaternion(0f, cameraTransform.rotation.y, 0f, transform.rotation.w);
         transform.rotation = desiredRotation;
 
-        
-        
+
+
     }
 
     private void MovePlayer()
@@ -65,37 +77,43 @@ public class PlayerMovementController : MonoBehaviour, IDamageable
         //move character according to camera direction
         movement2D = GetPlayerMovement();
         Vector3 movement3D = new Vector3(movement2D.x, 0f, movement2D.y);
-        movement3D = cameraTransform.forward * movement3D.z +cameraTransform.right * movement3D.x;
+        movement3D = cameraTransform.forward * movement3D.z + cameraTransform.right * movement3D.x;
         movement3D.y = 0f;
         controller.Move(movement3D * playerSpeed * Time.deltaTime);
     }
 
     private void Fire()
     {
-        if( PlayerFired() )
+        if (PlayerFired())
         {
-        RaycastHit hit;
-        Vector3 direction = cameraTransform.forward;
-        if(Physics.Raycast(transform.position, direction, out hit))
-        {
-            IDamageable objectToDamage = hit.collider.gameObject.GetComponent(typeof(IDamageable)) as IDamageable;
-            if(objectToDamage != null)
+            RaycastHit hit;
+            Vector3 direction = cameraTransform.forward;
+            if (Physics.Raycast(transform.position, direction, out hit))
             {
-                objectToDamage.TakeDamage(shotDamage);
-                Debug.Log("Hit!");
+                IDamageable objectToDamage = hit.collider.gameObject.GetComponent(typeof(IDamageable)) as IDamageable;
+                if (objectToDamage != null)
+                {
+                    objectToDamage.TakeDamage(shotDamage);
+                    Debug.Log("Hit!");
+                }
             }
-        }
         }
     }
 
     public void Kill()
     {
-
+        Destroy(transform.gameObject);
     }
 
     public void TakeDamage(float damage)
     {
-        
+        currentHealth -= damage;
+        healthBar.SetHealth(currentHealth);
+
+        if (currentHealth <= 0.0f)
+        {
+            Kill();
+        }
     }
 
     private void SetAnimatorParams()
